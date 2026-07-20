@@ -1,0 +1,25 @@
+# --- uv Specifics ---
+# Always ignore the local virtual environment directory
+.venv/
+
+# Do NOT ignore uv.lock; commit it for reproducible installations
+# !uv.lock
+
+# --- Python Build & Cache Artifacts ---
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.eggs/
+build/
+dist/
+wheels/
+
+# --- Environment Variables & Secrets ---
+.env
+.env.local
+
+# --- Optional: Python Tooling Caches ---
+.mypy_cache/
+.pytest_cache/
+.ruff_cache/
