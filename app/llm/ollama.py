@@ -24,7 +24,6 @@ class OllamaProvider(LLMProvider):
             tools_schema,
         )
 
-        print(prompt)
 
         response = self.client.chat(
             model=self.model,
@@ -46,7 +45,6 @@ class OllamaProvider(LLMProvider):
         try:
             data = json.loads(content)
 
-            print(data)
 
         except json.JSONDecodeError:
             return TextResponse(
