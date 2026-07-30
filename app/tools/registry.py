@@ -1,5 +1,7 @@
-from typing import Callable
+import inspect
+import json
 
+from typing import Callable
 from app.tools.base import Tool
 
 
@@ -27,3 +29,37 @@ class ToolRegistry:
     def list_functions(self):
 
         return list(self._functions.keys())
+    
+    def get_schema(self) -> str:
+        schema = []
+
+        for name, function in self._functions.items():
+
+            signature = inspect.signature(function)
+
+            arguments = {}
+
+            for parameter in signature.parameters.values():
+
+                annotation = parameter.annotation
+
+                if annotation is inspect.Parameter.empty:
+                    annotation = "any"
+
+                elif hasattr(annotation, "__name__"):
+                    annotation = annotation.__name__
+
+                else:
+                    annotation = str(annotation)
+
+                arguments[parameter.name] = annotation
+
+            schema.append({
+                "name": name,
+                "arguments": arguments,
+            })
+
+        return json.dumps(
+            schema,
+            indent=2,
+        )

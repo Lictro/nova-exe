@@ -1,4 +1,4 @@
-from app.core.parser import ToolCallParser
+from app.core.models import ToolCall, TextResponse
 from app.llm.provider import LLMProvider
 from app.tools.registry import ToolRegistry
 
@@ -7,27 +7,32 @@ class NovaAgent:
 
     def __init__(
         self,
-        llm: LLMProvider,
-        registry: ToolRegistry,
+        llm,
+        registry,
     ):
         self.llm = llm
         self.registry = registry
 
-    def chat(self, message: str) -> str:
 
-        response = self.llm.chat(message)
+    def chat(self, message: str):
 
-        tool_call = ToolCallParser.parse(response)
+        tools_schema = self.registry.get_schema()
 
-        if tool_call is None:
-            return response
-
-        tool_name = tool_call["tool"]
-        arguments = tool_call["arguments"]
-
-        result = self.registry.call(
-            tool_name,
-            **arguments,
+        response = self.llm.chat(
+            message,
+            tools_schema,
         )
 
-        return result
+
+        if isinstance(response, TextResponse):
+            return response.text
+
+
+        if isinstance(response, ToolCall):
+
+            result = self.registry.call(
+                response.tool,
+                **response.arguments,
+            )
+
+            return result

@@ -8,7 +8,25 @@ class FileSystemTool(Tool):
 
     name = "filesystem"
 
-    description = "Read and write files."
+    description = """
+    Filesystem operations.
+
+    Available functions:
+
+    filesystem.create_file:
+    Creates a new file.
+
+    Arguments:
+    - path: string
+    - content: string
+
+
+    filesystem.read_file:
+    Reads an existing file.
+
+    Arguments:
+    - path: string
+    """
 
     def create_file(
         self,
