@@ -1,0 +1,53 @@
+from app.core.models import ToolCall, TextResponse
+from app.core.conversation import Conversation
+
+
+class AgentLoop:
+
+    MAX_ITERATIONS = 10
+
+    def __init__(
+        self,
+        llm,
+        registry,
+    ):
+        self.llm = llm
+        self.registry = registry
+
+
+    def run(
+        self,
+        conversation: Conversation,
+    ):
+
+        tools_schema = self.registry.get_schema()
+
+        iteration = 0
+
+        while iteration < self.MAX_ITERATIONS:
+
+            iteration += 1
+
+            response = self.llm.chat(
+                conversation,
+                tools_schema,
+            )
+
+            if isinstance(response, TextResponse):
+                return response.text
+
+
+            if isinstance(response, ToolCall):
+
+                result = self.registry.call(
+                    response.tool,
+                    **response.arguments,
+                )
+
+                conversation.add_tool(
+                    response.tool,
+                    result,
+                )
+
+
+        return "Maximum iterations reached."
