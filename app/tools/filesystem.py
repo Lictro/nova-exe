@@ -33,6 +33,13 @@ class FileSystemTool(Tool):
         path: str,
         content: str,
     ) -> str:
+        """
+        Creates a new text file.
+
+        Args:
+            path: Path of the file to create.
+            content: Text to write into the file.
+        """
 
         Path(path).write_text(content)
 
@@ -42,6 +49,12 @@ class FileSystemTool(Tool):
         self,
         path: str,
     ) -> str:
+        """
+        Reads a text file.
+
+        Args:
+            path: Path of the file to read.
+        """
 
         return Path(path).read_text()
 
