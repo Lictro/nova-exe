@@ -56,6 +56,7 @@ class ToolRegistry:
 
             schema.append({
                 "name": name,
+                "description": inspect.getdoc(function) or "",
                 "arguments": arguments,
             })
 
