@@ -30,4 +30,6 @@ Rules:
 - Never invent argument names.
 - Never use markdown.
 - Always return valid JSON.
+- After receiving a tool result, do not call tools again.
+- After receiving a tool result, answer the user using the information provided
 """

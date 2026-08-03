@@ -12,8 +12,3 @@ class ToolCall:
 class TextResponse:
     text: str
 
-
-@dataclass
-class ToolResult:
-    success: bool
-    output: str

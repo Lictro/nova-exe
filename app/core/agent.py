@@ -1,3 +1,4 @@
+from app.core.conversation import Conversation
 from app.core.models import ToolCall, TextResponse
 from app.llm.provider import LLMProvider
 from app.tools.registry import ToolRegistry
@@ -18,8 +19,15 @@ class NovaAgent:
 
         tools_schema = self.registry.get_schema()
 
-        response = self.llm.chat(
+        conversation = Conversation()
+
+        conversation.add(
+            "user",
             message,
+        )
+
+        response = self.llm.chat(
+            conversation,
             tools_schema,
         )
 
@@ -35,4 +43,19 @@ class NovaAgent:
                 **response.arguments,
             )
 
-            return result
+            conversation.add_tool(
+                response.tool,
+                result,
+            )
+
+            response = self.llm.chat(
+                conversation,
+                tools_schema,
+            )
+
+            if isinstance(response, TextResponse):
+                return response.text
+            
+            print(response)
+
+            return "Unexpected response after tool execution."

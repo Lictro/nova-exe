@@ -1,6 +1,7 @@
 import json
 import ollama
 
+from app.core.conversation import Conversation
 from app.core.models import ToolCall, TextResponse
 from app.core.prompt import SYSTEM_PROMPT
 from app.llm.provider import LLMProvider
@@ -15,7 +16,7 @@ class OllamaProvider(LLMProvider):
 
     def chat(
         self,
-        message: str,
+        conversation: Conversation,
         tools_schema: str,
     ) -> ToolCall | TextResponse:
         
@@ -27,15 +28,12 @@ class OllamaProvider(LLMProvider):
 
         response = self.client.chat(
             model=self.model,
-            messages=[
+            messages = [
                 {
                     "role": "system",
                     "content": prompt,
                 },
-                {
-                    "role": "user",
-                    "content": message,
-                }
+                *conversation.messages,
             ],
             format="json",
         )
