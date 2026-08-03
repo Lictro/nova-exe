@@ -6,6 +6,8 @@ from app.tools.registry import ToolRegistry
 
 class NovaAgent:
 
+    MAX_ITERATIONS = 10
+
     def __init__(
         self,
         llm,
@@ -26,36 +28,33 @@ class NovaAgent:
             message,
         )
 
-        response = self.llm.chat(
-            conversation,
-            tools_schema,
-        )
+        iteration = 0
 
+        while iteration < self.MAX_ITERATIONS:
 
-        if isinstance(response, TextResponse):
-            return response.text
-
-
-        if isinstance(response, ToolCall):
-
-            result = self.registry.call(
-                response.tool,
-                **response.arguments,
-            )
-
-            conversation.add_tool(
-                response.tool,
-                result,
-            )
+            iteration += 1
 
             response = self.llm.chat(
                 conversation,
                 tools_schema,
             )
 
+
             if isinstance(response, TextResponse):
                 return response.text
-            
-            print(response)
 
-            return "Unexpected response after tool execution."
+
+            if isinstance(response, ToolCall):
+
+                result = self.registry.call(
+                    response.tool,
+                    **response.arguments,
+                )
+
+                conversation.add_tool(
+                    response.tool,
+                    result,
+                )
+
+
+        return "Maximum iterations reached."
