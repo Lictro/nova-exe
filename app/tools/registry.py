@@ -22,9 +22,13 @@ class ToolRegistry:
     def call(self, name: str, **kwargs):
 
         if name not in self._functions:
-            raise ValueError(f"Unknown function: {name}")
+            return f"ERROR: Unknown function '{name}'."
 
-        return self._functions[name](**kwargs)
+        try:
+            return self._functions[name](**kwargs)
+
+        except Exception as e:
+            return f"ERROR: {type(e).__name__}: {e}"
 
     def list_functions(self):
 
