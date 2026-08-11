@@ -1,5 +1,7 @@
 import json
+import os
 import ollama
+import platform
 
 from app.core.conversation import Conversation
 from app.core.models import ToolCall, TextResponse
@@ -20,18 +22,31 @@ class OllamaProvider(LLMProvider):
         tools_schema: str,
     ) -> ToolCall | TextResponse:
         
+        system_info = f"""
+        Operating System:
+        {platform.system()}
+
+        Machine:
+        {platform.machine()}
+
+        Shell:
+        {os.environ.get("SHELL") or os.environ.get("COMSPEC", "Unknown")}
+
+        Python:
+        {platform.python_version()}
+        """
+        
         prompt = SYSTEM_PROMPT.replace(
             "{tools}",
             tools_schema,
         )
-
 
         response = self.client.chat(
             model=self.model,
             messages = [
                 {
                     "role": "system",
-                    "content": prompt,
+                    "content": prompt + system_info,
                 },
                 *conversation.messages,
             ],

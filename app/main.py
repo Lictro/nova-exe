@@ -4,6 +4,7 @@ from app.llm.ollama import OllamaProvider
 
 from app.tools.filesystem import FileSystemTool
 from app.tools.registry import ToolRegistry
+from app.tools.terminal import TerminalTool
 
 
 def main():
@@ -12,6 +13,10 @@ def main():
 
     registry.register(
         FileSystemTool()
+    )
+
+    registry.register(
+        TerminalTool()
     )
 
     nova = NovaAgent(
