@@ -57,10 +57,29 @@ class FileSystemTool(Tool):
         """
 
         return Path(path).read_text()
+    
+    def write_file(
+        self,
+        path: str,
+        content: str,
+    ) -> str:
+        
+        """
+        Writes a text file.
+
+        Args:
+            path: Path of the file to write.
+            content: Text to write into the file.
+        """
+
+        Path(path).write_text(content)
+
+        return f"Written {path}"
 
     def get_functions(self) -> dict[str, Callable]:
 
         return {
             "create_file": self.create_file,
             "read_file": self.read_file,
+            "write_file": self.write_file,
         }

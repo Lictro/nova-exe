@@ -39,6 +39,11 @@ class AgentLoop:
 
             if isinstance(response, ToolCall):
 
+                conversation.add_tool_call(
+                    response.tool,
+                    response.arguments,
+                )
+
                 result = self.registry.call(
                     response.tool,
                     **response.arguments,
