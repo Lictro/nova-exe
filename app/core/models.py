@@ -12,3 +12,7 @@ class ToolCall:
 class TextResponse:
     text: str
 
+@dataclass
+class ToolResult:
+    tool: str
+    result: str

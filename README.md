@@ -9,3 +9,32 @@ Autonomous AI Software Engineer.
 - Tool Based
 - Extensible
 - Autonomous
+
+## Current Architecture
+
+```text
+NovaAgent
+    ↓
+AgentLoop
+    ↓
+LLMProvider
+    ↓
+ToolCall / TextResponse
+    ↓
+ToolRegistry
+    ↓
+Tools
+    ↓
+ToolResult
+    ↓
+Conversation
+```
+
+## Stack
+- Python
+- Ollama
+- Qwen
+- uv
+
+## Status
+Work in progress.

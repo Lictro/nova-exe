@@ -1,4 +1,4 @@
-from app.core.models import ToolCall, TextResponse
+from app.core.models import ToolCall, TextResponse, ToolResult
 from app.core.conversation import Conversation
 
 
@@ -13,7 +13,6 @@ class AgentLoop:
     ):
         self.llm = llm
         self.registry = registry
-
 
     def run(
         self,
@@ -36,7 +35,6 @@ class AgentLoop:
             if isinstance(response, TextResponse):
                 return response.text
 
-
             if isinstance(response, ToolCall):
 
                 conversation.add_tool_call(
@@ -49,10 +47,14 @@ class AgentLoop:
                     **response.arguments,
                 )
 
-                conversation.add_tool(
-                    response.tool,
-                    result,
+                tool_result = ToolResult(
+                    tool=response.tool,
+                    result=result,
                 )
 
+                conversation.add_tool(
+                    tool_result.tool,
+                    tool_result.result,
+                )
 
         return "Maximum iterations reached."
