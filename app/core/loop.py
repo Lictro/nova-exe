@@ -1,4 +1,4 @@
-from app.core.models import ToolCall, TextResponse, ToolResult
+from app.core.models import ToolCall, TextResponse
 from app.core.conversation import Conversation
 
 
@@ -42,14 +42,9 @@ class AgentLoop:
                     response.arguments,
                 )
 
-                result = self.registry.call(
+                tool_result = self.registry.call(
                     response.tool,
                     **response.arguments,
-                )
-
-                tool_result = ToolResult(
-                    tool=response.tool,
-                    result=result,
                 )
 
                 conversation.add_tool(

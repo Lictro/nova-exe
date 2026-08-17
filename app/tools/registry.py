@@ -3,6 +3,7 @@ import json
 
 from typing import Callable
 from app.tools.base import Tool
+from app.core.models import ToolResult
 
 
 class ToolRegistry:
@@ -19,16 +20,27 @@ class ToolRegistry:
 
             self._functions[key] = function
 
-    def call(self, name: str, **kwargs):
+    def call(self, name: str, **kwargs) -> ToolResult:
 
         if name not in self._functions:
-            return f"ERROR: Unknown function '{name}'."
+            return ToolResult(
+                tool=name,
+                result=f"ERROR: Unknown function '{name}'.",
+            )
 
         try:
-            return self._functions[name](**kwargs)
+            result = self._functions[name](**kwargs)
+
+            return ToolResult(
+                tool=name,
+                result=result,
+            )
 
         except Exception as e:
-            return f"ERROR: {type(e).__name__}: {e}"
+            return ToolResult(
+                tool=name,
+                result=f"ERROR: {type(e).__name__}: {e}",
+            )
 
     def list_functions(self):
 
